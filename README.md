@@ -1,13 +1,13 @@
 # Mechanistic Peek into GPT‑2 Small with TransformerLens
 
-This repo/notebook demonstrates two classic **mechanistic interpretability** tools on `gpt2-small` using [TransformerLens](https://github.com/neelnanda-io/TransformerLens):
+This repo/notebook demonstrates two **mechanistic interpretability** tools on `gpt2-small` using [TransformerLens](https://github.com/neelnanda-io/TransformerLens):
 
 1) **Logit Lens** – project intermediate residual streams to vocabulary logits to see where evidence for the target token accumulates across layers.  
-2) **Causal Tracing (Activation Patching)** – identify which attention heads *cause* correct behavior by replacing their contributions with those from a clean run.
+2) **Causal Tracing (Activation Patching)** – identify which attention heads cause correct behavior by replacing their contributions with those from a clean run.
 
 > **TL;DR**  
-> - Plot a *logit‑lens curve* per question to visualize which layers build evidence for the correct answer.  
-> - Run *per‑head activation patching* to surface top causal heads and visualize their attention patterns.
+> - Plot a logit‑lens curve per question to visualize which layers build evidence for the correct answer.  
+> - Run per‑head activation patching to surface top causal heads and visualize their attention patterns.
 
 ---
 
@@ -104,11 +104,11 @@ def logit_lens_curve(prompt: str, target_token: str):
     return vals
 ```
 
-- Caches **residual streams** at each block.  
-- Projects each residual (after `ln_final`) through the **unembedding** to get the logit for the **target token**.  
+- Caches residual streams at each block.  
+- Projects each residual (after `ln_final`) through the unembedding to get the logit for the target token.  
 - Returns a list of logits—one per layer—optionally with a final point from `resid_post` of the last block.
 
-Use it to **plot evidence accumulation** across layers.
+Use it to plot evidence accumulation across layers.
 
 ---
 
@@ -147,11 +147,11 @@ def causal_head_scores(clean_prompt: str, corrupt_prompt: str, ans_token: str):
     return scores
 ```
 
-Per‑head **activation patching**:
-- Run a **clean** prompt (correct answer implied) and a **corrupt** prompt (distractor added).  
-- For each attention head `(L, H)`, **replace** its last‑position `z` vector in the corrupt run with the one from the clean run.  
-- Measure the **increase in the target token logit** (`Δ logit`) at the final position.  
-- Larger `Δ` ⇒ head is **more causally responsible** for the correct answer.
+Per‑head activation patching:
+- Run a clean prompt (correct answer implied) and a corrupt prompt (distractor added).  
+- For each attention head `(L, H)`, replace its last‑position `z` vector in the corrupt run with the one from the clean run.  
+- Measure the increase in the target token logit (`Δ logit`) at the final position.  
+- Larger `Δ` ⇒ head is more causally responsible for the correct answer.
 
 ---
 
@@ -223,18 +223,10 @@ print(model.to_string(t_clean[0]))
 - **`HF_TOKEN` warning in Colab**: optional; public models don’t require auth.  
 - **`torch_dtype` deprecation**: emitted by internal deps; safe to ignore.  
 - **CUDA OOM / slow**: switch to CPU (slower) or shorten prompts; Colab T4/A100 recommended.  
-- **Token mismatch**: many answers require a **leading space** (e.g., `" Jane"`, `" Paris"`). Use `print(model.to_string(...))` and `model.to_tokens(...)` to verify.
+- **Token mismatch**: many answers require a leading space (e.g., `" Jane"`, `" Paris"`). Use `print(model.to_string(...))` and `model.to_tokens(...)` to verify.
 
 ---
 
-## Extending This Notebook
-
-- Swap `gpt2-small` for other HookedTransformer checkpoints (e.g., `attn-only` or larger GPT‑2 variants).  
-- Patch **MLP outputs** (`hook_mlp_out`) or **residual streams** directly for circuit discovery.  
-- Aggregate causal scores across **multiple prompts** per concept.  
-- Save plots and scores to disk for reproducible experiments.
-
----
 
 ## Citations & Further Reading
 
