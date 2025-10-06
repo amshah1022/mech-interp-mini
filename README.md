@@ -1,6 +1,6 @@
 # Mechanistic Peek into GPT‑2 Small with TransformerLens
 
-This repo/notebook demonstrates two **mechanistic interpretability** tools on `gpt2-small` using [TransformerLens](https://github.com/neelnanda-io/TransformerLens):
+This repo/notebook demonstrates two mechanistic interpretability tools on `gpt2-small` using [TransformerLens](https://github.com/neelnanda-io/TransformerLens):
 
 1) **Logit Lens** – project intermediate residual streams to vocabulary logits to see where evidence for the target token accumulates across layers.  
 2) **Causal Tracing (Activation Patching)** – identify which attention heads cause correct behavior by replacing their contributions with those from a clean run.
