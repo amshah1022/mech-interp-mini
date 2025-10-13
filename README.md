@@ -218,15 +218,6 @@ print(model.to_string(t_clean[0]))
 
 ---
 
-## Troubleshooting
-
-- **`HF_TOKEN` warning in Colab**: optional; public models don’t require auth.  
-- **`torch_dtype` deprecation**: emitted by internal deps; safe to ignore.  
-- **CUDA OOM / slow**: switch to CPU (slower) or shorten prompts; Colab T4/A100 recommended.  
-- **Token mismatch**: many answers require a leading space (e.g., `" Jane"`, `" Paris"`). Use `print(model.to_string(...))` and `model.to_tokens(...)` to verify.
-
----
-
 
 ## Citations & Further Reading
 
